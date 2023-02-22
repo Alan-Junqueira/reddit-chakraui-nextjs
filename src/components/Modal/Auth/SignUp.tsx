@@ -4,6 +4,7 @@ import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { FIREBASE_ERRORS } from '@/services/firebase/errors';
 
 export const SignUp = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -74,12 +75,19 @@ export const SignUp = () => {
         _focus={{ outline: 'none', border: '1px solid blue.500' }}
         onChange={handleChange}
       />
-      {error && (
+      {(error || userError) && (
         <Text textAlign="center" color="red" fontSize="10pt">
-          {error}
+          {error ||
+            FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}
         </Text>
       )}
-      <Button type="submit" width="100%" height="36px" marginBlock={2} isLoading={loading}>
+      <Button
+        type="submit"
+        width="100%"
+        height="36px"
+        marginBlock={2}
+        isLoading={loading}
+      >
         Sign Up
       </Button>
       <Flex fontSize="9pt" justifyContent="center">
