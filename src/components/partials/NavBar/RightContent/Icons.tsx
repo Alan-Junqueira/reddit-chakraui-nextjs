@@ -73,6 +73,7 @@ export const Icons = () => {
           padding={1}
           cursor="pointer"
           borderRadius={4}
+          display={{ base: 'none', md: 'flex' }}
           _hover={{ bg: 'gray.200' }}
         >
           <Icon as={GrAdd} fontSize={20} />
