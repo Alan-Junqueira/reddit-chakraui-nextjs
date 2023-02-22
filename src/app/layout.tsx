@@ -5,6 +5,7 @@ import { Footer } from '@/components/partials/Footer';
 import { NavBar } from '@/components/partials/NavBar';
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
+import { RecoilRoot } from 'recoil';
 
 export default function RootLayout({
   children
@@ -19,13 +20,15 @@ export default function RootLayout({
       */}
       <head />
       <body>
-        <CacheProvider>
-          <ChakraProvider theme={theme}>
-            <NavBar />
-            {children}
-            <Footer />
+        <RecoilRoot>
+          <CacheProvider>
+            <ChakraProvider theme={theme}>
+              <NavBar />
+              {children}
+              <Footer />
             </ChakraProvider>
-        </CacheProvider>
+          </CacheProvider>
+        </RecoilRoot>
       </body>
     </html>
   );
