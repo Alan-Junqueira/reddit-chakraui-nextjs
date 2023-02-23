@@ -3,6 +3,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Flex, Icon, Menu, MenuButton, MenuList, Text } from '@chakra-ui/react';
 import { useSetRecoilState } from 'recoil';
 import { TiHome } from 'react-icons/ti';
+import { Communities } from './Communities';
 
 export const Directory = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -34,7 +35,7 @@ export const Directory = () => {
         </Flex>
       </MenuButton>
       <MenuList>
-        {/* <Comunities /> */}
+        <Communities />
         Comunities
       </MenuList>
     </Menu>
