@@ -37,7 +37,7 @@ export const AuthModal = () => {
 
   useEffect(() => {
     if (user) handleClose();
-    console.log(user);
+    // console.log(user);
   }, [handleClose, user]);
 
   return (

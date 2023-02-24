@@ -19,6 +19,9 @@ import {
 } from '@chakra-ui/react';
 import { BsFillEyeFill, BsFillPersonFill } from 'react-icons/bs';
 import { HiLockClosed } from 'react-icons/hi';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { auth, firestore } from '@/services/firebase/clientApp';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 interface ICreateCommunityModal {
   open: boolean;
@@ -29,9 +32,12 @@ export const CreateCommunityModal = ({
   open,
   handleClose
 }: ICreateCommunityModal) => {
+  const [user] = useAuthState(auth);
   const [communityName, setCommunityName] = useState('');
   const [charsRemaining, setCharsRemaining] = useState(21);
   const [communityType, setCommunityType] = useState('public');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 21) return;
@@ -44,6 +50,43 @@ export const CreateCommunityModal = ({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setCommunityType(event.target.name);
+  };
+
+  const handleCreateCommunity = async () => {
+    // Validate the community name
+    if (error) setError('');
+    const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (format.test(communityName) || communityName.length < 3) {
+      setError(
+        'Community names must be between 3-21 characters, and can only contain letters, numbers, and underscores'
+      );
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const communityDocRef = doc(firestore, 'communities', communityName);
+
+      // Check if community exists in db
+      const communityDoc = await getDoc(communityDocRef);
+      if (communityDoc.exists()) {
+        throw new Error(`Sorry, r/ ${communityName} is taken. Try another.`);
+      }
+
+      // Create community
+      await setDoc(communityDocRef, {
+        creatorId: user?.uid,
+        createdAt: serverTimestamp(),
+        numberOfMembers: 1,
+        privacyType: communityType
+      });
+    } catch (error: any) {
+      console.log('handleCreateCommunity error', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,6 +133,9 @@ export const CreateCommunityModal = ({
                 color={charsRemaining === 0 ? 'red' : 'gray.500'}
               >
                 {charsRemaining} Characters remaining
+              </Text>
+              <Text fontSize={9} color="red" pt={1}>
+                {error}
               </Text>
               <Box marginBlock={4}>
                 <Text fontWeight={600} fontSize={15}>
@@ -159,7 +205,13 @@ export const CreateCommunityModal = ({
             >
               Cancel
             </Button>
-            <Button height="30px" onClick={()=>{}}>Create Community</Button>
+            <Button
+              height="30px"
+              onClick={handleCreateCommunity}
+              isLoading={loading}
+            >
+              Create Community
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
