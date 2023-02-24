@@ -1,12 +1,10 @@
-import { Button } from '@chakra-ui/react';
-import { AuthModal } from '@/components/Modal/Auth/AuthModal';
 import { Flex } from '@chakra-ui/react';
 import React from 'react';
 import { AuthButtons } from './AuthButtons';
-import { signOut, User } from 'firebase/auth';
-import { auth } from '@/services/firebase/clientApp';
+import { User } from 'firebase/auth';
 import { Icons } from './Icons';
 import { UserMenu } from './UserMenu';
+import { AuthModal } from '@/components/Modal/Auth/AuthModal';
 
 interface IRightConent {
   user?: User | null;

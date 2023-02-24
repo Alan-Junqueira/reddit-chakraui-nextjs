@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Flex, Icon, MenuItem } from '@chakra-ui/react';
 import { GrAdd } from 'react-icons/gr';
-
 import { CreateCommunityModal } from '@/components/Modal/CreateCommunity/CreateCommunityModal';
+
 
 export const Communities = () => {
   const [open, setOpen] = useState(false);
